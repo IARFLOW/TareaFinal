@@ -5,7 +5,7 @@ public class EnemyBasicController : MonoBehaviour
 {
     public float speed = 2f;
     public float patrolDistance = 2f;
-    public float bounceForce = 1f;
+    public float bounceForce = 5f;  // Aumentado para dar un mejor rebote
 
     private float leftBound;
     private float rightBound;
@@ -58,23 +58,27 @@ public class EnemyBasicController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            foreach (ContactPoint2D contact in collision.contacts)
+            // Verificar la posición del jugador respecto al enemigo
+            float playerBottom = collision.transform.position.y - collision.transform.GetComponent<Collider2D>().bounds.extents.y;
+            float enemyTop = transform.position.y + GetComponent<Collider2D>().bounds.extents.y * 0.8f;
+
+            // Si el fondo del jugador está por encima del tope del enemigo, es un salto encima
+            if (playerBottom > enemyTop)
             {
-                // Si el contacto es en la parte superior del enemigo
-                if (contact.normal.y > 0.5f)
+                // El jugador está saltando sobre el enemigo
+                Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
+                if (playerRb != null)
                 {
-                    Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
-                    if (playerRb != null)
-                    {
-                        playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 0);
-                        playerRb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
-                    }
-                    Destroy(gameObject);
-                    return;
+                    playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 0);
+                    playerRb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
                 }
+                Destroy(gameObject);
             }
-            // Si el contacto es lateral, reiniciar nivel
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            else
+            {
+                // Contacto lateral, reiniciar nivel
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
         }
     }
 }

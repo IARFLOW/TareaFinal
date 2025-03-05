@@ -56,5 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "TareaFianl.sln"
+    "dotnet.defaultSolution": "TareaFinal.sln",
+    "CodeGPT.apiKey": "CodeGPT Plus Beta"
 }

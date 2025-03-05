@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1216178266328821928
 Transform:
   m_ObjectHideFlags: 0
@@ -147,4 +147,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e971df6302a97084b80d97b2cc6ad951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeInSeconds: 30
+  barrier: {fileID: 0}
+  coinText: {fileID: 0}
+  timerText: {fileID: 0}
+  timeLimit: 60
+  totalCoins: 0
+  collectedCoins: 0
