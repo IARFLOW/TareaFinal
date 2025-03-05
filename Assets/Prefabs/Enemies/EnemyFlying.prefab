@@ -45,6 +45,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 770fc3c13d6aa8940a5b8a05a0926ee5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isStatic: 0
+  flySpeed: 1
+  amplitude: 1
+  frequency: 1
+  patternType: 0
+  pointA: {fileID: 0}
+  pointB: {fileID: 0}
+  bulletPrefab: {fileID: 0}
+  fireRate: 1
+  randomFireVariation: 0.5
+  minTimeBetweenShots: 2
+  fireChance: 0.7
+  numberOfBullets: 3
+  spreadAngle: 45
 --- !u!212 &5508287614138678012
 SpriteRenderer:
   m_ObjectHideFlags: 0
