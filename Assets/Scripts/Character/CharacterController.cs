@@ -1,16 +1,17 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class CharacterController : MonoBehaviour
 {
     private Animator heroAnimator;
     private Rigidbody2D rb;
-    public float speed = 3f;
-    public float jumpForce = 5f;
+    public float speed = 10f;
+    public float jumpForce = 6f;
     private Vector2 direction;
     private int jumpCount = 0;
     private bool levelCompleted = false;
+    public float fallThreshold = -10f;
 
     void Start()
     {
@@ -52,6 +53,7 @@ public class CharacterController : MonoBehaviour
             heroAnimator.Play("Jump");
         }
         transform.rotation = Quaternion.identity;
+        CheckFallOutOfBounds();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -90,5 +92,26 @@ public class CharacterController : MonoBehaviour
         {
             SceneManager.LoadScene(0);
         }
+    }
+
+    void CheckFallOutOfBounds()
+    {
+        if (transform.position.y < fallThreshold)
+        {
+            RestartLevel();
+        }
+    }
+
+    void RestartLevel()
+    {
+        if (levelCompleted) return;
+        levelCompleted = true;
+        StartCoroutine(RestartLevelWithDelay(0.5f));
+    }
+
+    IEnumerator RestartLevelWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

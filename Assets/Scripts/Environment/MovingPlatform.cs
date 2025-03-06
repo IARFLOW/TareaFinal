@@ -1,25 +1,23 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class MovingPlatform : MonoBehaviour
 {
-    public float speed = 2f;
-    public float height = 5f;
+    public float speed = 5f;
+    public float distance = 5f;
     public float pauseTime = 2f;
+    public enum MovementType { Vertical, Horizontal }
+    public MovementType movementType = MovementType.Vertical;
 
     private Vector3 startPosition;
-    private bool movingUp = true;
+    private bool movingForward = true;
     private bool isPaused = false;
 
-    // Start is called before the first frame update
     void Start()
     {
         startPosition = transform.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!isPaused)
@@ -31,14 +29,23 @@ public class MovingPlatform : MonoBehaviour
     void MovePlatform()
     {
         float step = speed * Time.deltaTime;
-        Vector3 targetPosition = movingUp ? startPosition + Vector3.up * height : startPosition;
+        Vector3 targetPosition;
+
+        if (movementType == MovementType.Vertical)
+        {
+            targetPosition = movingForward ? startPosition + Vector3.up * distance : startPosition;
+        }
+        else
+        {
+            targetPosition = movingForward ? startPosition + Vector3.right * distance : startPosition;
+        }
 
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
 
         if (transform.position == targetPosition)
         {
             StartCoroutine(PausePlatform());
-            movingUp = !movingUp;
+            movingForward = !movingForward;
         }
     }
 
@@ -53,8 +60,8 @@ public class MovingPlatform : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // Si el personaje está debajo de la plataforma, lo empujamos hacia abajo
-            if (collision.transform.position.y < transform.position.y)
+            if (movementType == MovementType.Vertical && !movingForward &&
+                collision.transform.position.y < transform.position.y)
             {
                 collision.transform.position = new Vector3(
                     collision.transform.position.x,
@@ -62,6 +69,16 @@ public class MovingPlatform : MonoBehaviour
                     collision.transform.position.z
                 );
             }
+
+            collision.transform.SetParent(transform);
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.transform.SetParent(null);
         }
     }
 }
